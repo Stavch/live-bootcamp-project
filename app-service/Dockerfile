@@ -2,7 +2,17 @@
 FROM rust:1.85-alpine AS chef
 USER root
 # Add cargo-chef to cache dependencies
-RUN apk add --no-cache musl-dev & cargo install cargo-chef
+COPY company-ca.cer C:\Windows\System32
+
+#RUN apk add --no-cache musl-dev & cargo install cargo-chef
+
+RUN apk add --no-cache musl-dev openssl ca-certificates curl && \
+    update-ca-certificates && \
+    cargo install cargo-chef
+
+    ENV CARGO_HTTP_CHECK_REVOKE=false
+
+
 WORKDIR /app
 
 FROM chef AS planner
