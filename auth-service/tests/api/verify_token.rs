@@ -3,7 +3,6 @@ use auth_service::{utils::constants::JWT_COOKIE_NAME, ErrorResponse};
 use crate::helpers::{get_random_email, TestApp};
 
 #[tokio::test]
-
 async fn should_return_200_valid_token() {
     let app = TestApp::new().await;
 

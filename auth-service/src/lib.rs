@@ -25,7 +25,7 @@ pub struct Application {
 }
 
 impl Application {
-    pub async fn build(app_state: AppState, address: &str) -> Result<Self, Box<dyn Error>>{
+    pub async fn build(app_state: AppState, address: &str) -> Result<Self, Box<dyn Error>> {
         let allowed_origins = [
             "http://localhost:8000".parse()?,
             "http://[YOUR_DROPLET_IP]:8000".parse()?,
@@ -56,12 +56,10 @@ impl Application {
         self.server.await
     }
 }
-
 #[derive(Serialize, Deserialize)]
 pub struct ErrorResponse {
     pub error: String,
 }
-
 impl IntoResponse for AuthAPIError {
     fn into_response(self) -> Response {
         let (status, error_message) = match self {
@@ -71,7 +69,7 @@ impl IntoResponse for AuthAPIError {
                 (StatusCode::UNAUTHORIZED, "Incorrect credentials")
             }
             AuthAPIError::MissingToken => (StatusCode::BAD_REQUEST, "Missing auth token"),
-            AuthAPIError::InvalidToken => (StatusCode::UNAUTHORIZED, "Invalid auth token"), 
+            AuthAPIError::InvalidToken => (StatusCode::UNAUTHORIZED, "Invalid auth token"),
             AuthAPIError::UnexpectedError => {
                 (StatusCode::INTERNAL_SERVER_ERROR, "Unexpected error")
             }
