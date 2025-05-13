@@ -28,7 +28,7 @@ impl Application {
     pub async fn build(app_state: AppState, address: &str) -> Result<Self, Box<dyn Error>> {
         let allowed_origins = [
             "http://localhost:8000".parse()?,
-            "http://[YOUR_DROPLET_IP]:8000".parse()?,
+            "http://161.35.121.215:8000".parse()?,
         ];
 
         let cors = CorsLayer::new()

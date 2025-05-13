@@ -1,4 +1,4 @@
-use std::env;
+use std::{env, f32::consts::E};
 
 use askama::Template;
 use axum::{
@@ -46,7 +46,9 @@ async fn root() -> impl IntoResponse {
     Html(template.render().unwrap())
 }
 
+
 async fn protected(jar: CookieJar) -> impl IntoResponse {
+    println!("Requesting protected route");
     let jwt_cookie = match jar.get("jwt") {
         Some(cookie) => cookie,
         None => {
@@ -60,12 +62,17 @@ async fn protected(jar: CookieJar) -> impl IntoResponse {
         "token": &jwt_cookie.value(),
     });
 
-    let auth_hostname = env::var("AUTH_SERVICE_HOST_NAME").unwrap_or("0.0.0.0".to_owned());
+    println!("1");
+
+    let auth_hostname = env::var("AUTH_SERVICE_HOST_NAME").unwrap_or("127.0.0.1".to_owned());
     let url = format!("http://{}:3000/verify-token", auth_hostname);
 
     let response = match api_client.post(&url).json(&verify_token_body).send().await {
         Ok(response) => response,
-        Err(_) => {
+        
+        Err(e) => {
+            println!("url: {}", url);
+            println!("# Error: {:?}", e);
             return StatusCode::INTERNAL_SERVER_ERROR.into_response();
         }
     };
