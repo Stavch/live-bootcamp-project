@@ -5,12 +5,13 @@ USER root
 RUN apk add --no-cache \
     musl-dev \
     clang \
-    llvm \
-    libclang \
-    libclang-dev \
-    clang-dev \
+    llvm-dev \
+    libffi-dev \
     build-base \
     pkgconf \
+    clang-dev \
+    curl \
+    bash \
  && cargo install cargo-chef
 WORKDIR /app
 FROM chef AS planner
@@ -33,4 +34,5 @@ WORKDIR /app
 COPY --from=builder /app/target/release/auth-service /usr/local/bin
 COPY --from=builder /app/assets /app/assets
 ENV REDIS_HOST_NAME=redis
+ENV LIBCLANG_PATH=/usr/lib
 ENTRYPOINT ["/usr/local/bin/auth-service"]
