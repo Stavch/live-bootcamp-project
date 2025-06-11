@@ -2,17 +2,7 @@
 FROM rust:1.85-alpine AS chef
 USER root
 # Add cargo-chef to cache dependencies
-RUN apk add --no-cache \
-    musl-dev \
-    clang \
-    llvm-dev \
-    libffi-dev \
-    build-base \
-    pkgconf \
-    clang-dev \
-    curl \
-    bash \
- && cargo install cargo-chef
+RUN apk add --no-cache musl-dev & cargo install cargo-chef
 WORKDIR /app
 FROM chef AS planner
 COPY . .
@@ -34,5 +24,4 @@ WORKDIR /app
 COPY --from=builder /app/target/release/auth-service /usr/local/bin
 COPY --from=builder /app/assets /app/assets
 ENV REDIS_HOST_NAME=redis
-ENV LIBCLANG_PATH=/usr/lib
 ENTRYPOINT ["/usr/local/bin/auth-service"]
